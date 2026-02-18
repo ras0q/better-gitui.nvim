@@ -25,14 +25,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y luarocks
           sudo luarocks install luacheck
-      - run: make luacheck
+      - uses: jdx/mise-action@v2
+      - run: mise run lint
 
   stylua:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - run: make check-stylua
+      - run: mise run fmt:check:lua
 
 
   llscheck:
@@ -56,7 +57,9 @@ jobs:
       - name: Run llscheck
         run: |
           git config url."https://github.com/".insteadOf git@github.com:
-          make llscheck CONFIGURATION=.github/workflows/.luarc.json
+          mise run llscheck
+        env:
+          LLSCHECK_CONFIG: .github/workflows/.luarc.json
 
 
   mdformat:
@@ -64,7 +67,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - run: make check-mdformat
+      - run: mise run fmt:check:md
 
 
   urlchecker:

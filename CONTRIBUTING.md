@@ -8,13 +8,13 @@ Clone the repository, install mise-managed tools, and install LSP dependencies:
 git clone https://github.com/ras0q/better-gitui.nvim
 cd better-gitui.nvim
 mise install
-make download-dependencies
+mise run deps:download
 ```
 
 `mise install` installs `stylua`, `neovim`, `lua-language-server`, and `uv` as declared in
 `mise.toml`.
 
-`make download-dependencies` clones type stubs for busted/luassert and luvit-meta into
+`mise run deps:download` clones type stubs for busted/luassert and luvit-meta into
 `.dependencies/`.
 
 ## Testing
@@ -34,9 +34,7 @@ eval $(luarocks path --bin)
 ### Run tests
 
 ```sh
-make test
-# or directly
-busted spec/better_gitui/
+mise run test
 ```
 
 ### Watch mode (optional)
@@ -57,7 +55,7 @@ luarocks install luacov-multiple --local
 Generate an HTML coverage report:
 
 ```sh
-make coverage-html
+mise run coverage
 ```
 
 View the report:
@@ -71,9 +69,10 @@ Open `http://localhost:8000` in a browser.
 ## Linting & Formatting
 
 ```sh
-make luacheck       # static analysis
-make check-stylua   # formatting check
-make stylua         # apply formatting
+mise run lint           # static analysis
+mise run fmt:check      # check formatting (Lua + Markdown)
+mise run fmt            # apply formatting (Lua + Markdown)
+mise run check          # run all checks in parallel
 ```
 
 ## Minimal Reproduction

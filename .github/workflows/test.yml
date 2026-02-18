@@ -33,6 +33,9 @@ jobs:
     name: "test / ${{ matrix.os }} / nvim ${{ matrix.neovim }}"
     steps:
       - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          install: false
       - name: Install Neovim
         uses: rhysd/action-setup-vim@v1
         with:
@@ -82,7 +85,7 @@ jobs:
       - name: Configure git for HTTPS
         run: git config --global url."https://github.com/".insteadOf "git@github.com:"
       - name: Run coverage
-        run: make coverage-html
+        run: mise run coverage
       - name: Verify report exists
         run: |
           test -f luacov_html/index.html || { echo "luacov_html/index.html not found"; exit 1; }
