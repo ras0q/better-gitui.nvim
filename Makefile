@@ -1,4 +1,5 @@
-.PHONY: download-dependencies llscheck luacheck stylua test test-better-gitui
+.PHONY: download-dependencies llscheck luacheck stylua check-stylua mdformat check-mdformat test coverage-html
+
 
 ifeq ($(OS),Windows_NT)
     IGNORE_EXISTING =
@@ -26,10 +27,11 @@ stylua:
 	stylua lua plugin scripts spec
 
 check-mdformat:
-	python -m mdformat --check README.md CONTRIBUTING.md
+	uv tool run mdformat --check README.md CONTRIBUTING.md
 
 mdformat:
-	python -m mdformat README.md CONTRIBUTING.md
+	uv tool run mdformat README.md CONTRIBUTING.md
+
 
 test:
 	busted spec/better_gitui/

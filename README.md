@@ -57,9 +57,9 @@ vim.keymap.set("n", "<leader>g", "<Cmd>Gitui<CR>", { desc = "Open gitui" })
 When `:Gitui` is called, the plugin:
 
 1. Resolves a theme file path at `{stdpath("cache")}/gitui/theme_{colorscheme}.ron`
-2. If the file does not exist, generates a `.ron` theme by reading highlight groups from
+1. If the file does not exist, generates a `.ron` theme by reading highlight groups from
    the current Neovim colorscheme and writes it to disk.
-3. Launches `gitui -t <theme_path>` inside a terminal buffer in a floating window.
+1. Launches `gitui -t <theme_path>` inside a terminal buffer in a floating window.
 
 On every `ColorScheme` event the theme for the new colorscheme is regenerated automatically
 (with a 100 ms debounce).

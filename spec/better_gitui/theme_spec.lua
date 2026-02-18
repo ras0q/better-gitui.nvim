@@ -29,10 +29,7 @@ describe("theme.generate", function()
         for key, value in pairs(result) do
             if value ~= nil then
                 assert.is_string(value, key .. " should be a string")
-                assert.truthy(
-                    value:match("^#%x%x%x%x%x%x$"),
-                    key .. " should be a hex color, got: " .. tostring(value)
-                )
+                assert.truthy(value:match("^#%x%x%x%x%x%x$"), key .. " should be a hex color, got: " .. tostring(value))
             end
         end
     end)
