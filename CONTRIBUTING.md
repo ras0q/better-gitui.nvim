@@ -2,15 +2,20 @@
 
 ## Development Setup
 
-Clone the repository and install LSP dependencies:
+Clone the repository, install mise-managed tools, and install LSP dependencies:
 
 ```sh
 git clone https://github.com/ras0q/better-gitui.nvim
 cd better-gitui.nvim
+mise install
 make download-dependencies
 ```
 
-This clones type stubs for busted/luassert and luvit-meta into `.dependencies/`.
+`mise install` installs `stylua`, `neovim`, `lua-language-server`, and `uv` as declared in
+`mise.toml`.
+
+`make download-dependencies` clones type stubs for busted/luassert and luvit-meta into
+`.dependencies/`.
 
 ## Testing
 

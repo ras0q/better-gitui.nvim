@@ -34,7 +34,7 @@ mdformat:
 
 
 test:
-	busted spec/better_gitui/
+	eval "$$(luarocks path --bin)" && busted spec/better_gitui/
 
 # IMPORTANT: Make sure to run this first
 # ```
