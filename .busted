@@ -5,14 +5,7 @@ return {
     lua = "nvim -u NONE -U NONE -N -i NONE -l",
   },
   default = {
-    helper = "./spec/minimal_init.lua",
-    verbose = true,
-  },
-  better_gitui = {
     helper = "./spec/better_gitui/minimal_init.lua",
-    verbose = true,
-  },
-  tests = {
     verbose = true,
   },
 }

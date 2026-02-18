@@ -1,0 +1,128 @@
+*better-gitui.txt*          For Neovim >= 0.10.0       Last change: 2026 February
+
+==============================================================================
+Table of Contents                            *better-gitui-table-of-contents*
+
+1. better-gitui.nvim                                    |better-gitui-plugin|
+2. Features                                           |better-gitui-features|
+3. Requirements                                   |better-gitui-requirements|
+4. Installation                                   |better-gitui-installation|
+5. Usage                                                 |better-gitui-usage|
+6. How It Works                                   |better-gitui-how-it-works|
+7. API                                                     |better-gitui-api|
+8. Tracking Updates                           |better-gitui-tracking-updates|
+
+==============================================================================
+1. better-gitui.nvim                                    *better-gitui-plugin*
+
+Open gitui in a Neovim floating window, automatically themed to match your
+current colorscheme.
+
+==============================================================================
+2. Features                                           *better-gitui-features*
+
+- Opens gitui in a centered floating window
+- Auto-generates a gitui theme from your active Neovim colorscheme
+- Theme is cached per colorscheme and regenerated on |ColorScheme| events
+- No external Lua dependencies beyond Neovim itself
+
+==============================================================================
+3. Requirements                                   *better-gitui-requirements*
+
+- Neovim >= 0.10.0
+- `gitui` available in your `$PATH`
+  https://github.com/extrawurst/gitui
+
+==============================================================================
+4. Installation                                   *better-gitui-installation*
+
+lazy.nvim ~
+
+>lua
+    {
+        "ras0q/better-gitui.nvim",
+        version = "v1.*",
+    }
+<
+
+==============================================================================
+5. Usage                                                 *better-gitui-usage*
+
+COMMAND ~
+
+>vim
+    :Gitui
+<
+
+Opens gitui in a floating window. Running `:Gitui` again while the window is
+open closes it.
+
+KEYMAPS (inside the gitui window) ~
+
+- `<Esc>`  — exit terminal mode (enter normal mode)
+- `q`      — close the gitui window
+
+KEYMAP (recommended, add to your config) ~
+
+>lua
+    vim.keymap.set("n", "<leader>g", "<Cmd>Gitui<CR>", { desc = "Open gitui" })
+<
+
+==============================================================================
+6. How It Works                                   *better-gitui-how-it-works*
+
+When `:Gitui` is called, the plugin:
+
+1. Resolves a theme file path at
+   `{stdpath("cache")}/gitui/theme_{colorscheme}.ron`
+2. If the file does not exist, generates a `.ron` theme by reading highlight
+   groups from the current Neovim colorscheme and writes it to disk.
+3. Launches `gitui -t <theme_path>` inside a terminal buffer in a floating
+   window.
+
+On every |ColorScheme| event the theme file for the new colorscheme is
+regenerated automatically (with a 100 ms debounce).
+
+==============================================================================
+7. API                                                     *better-gitui-api*
+
+All public functions live in the `better_gitui` module.
+
+------------------------------------------------------------------------------
+                                                    *better_gitui.launch()*
+`require("better_gitui").launch()`
+
+Open the gitui floating window. If already open, close it instead.
+
+------------------------------------------------------------------------------
+                                               *better_gitui.write_theme()*
+`require("better_gitui").write_theme()`
+
+Generate a gitui `.ron` theme from the current Neovim colorscheme and write
+it to the cache directory. Returns the path string on success, or `nil` on
+failure.
+
+------------------------------------------------------------------------------
+                                            *better_gitui.get_theme_path()*
+`require("better_gitui").get_theme_path()`
+
+Return the expected path of the cached theme file for the current colorscheme.
+The file may or may not exist yet.
+
+------------------------------------------------------------------------------
+                                                     *better_gitui.close()*
+`require("better_gitui").close()`
+
+Close the gitui floating window and delete its buffer.
+
+==============================================================================
+8. Tracking Updates                           *better-gitui-tracking-updates*
+
+See CHANGELOG.md for release notes.
+
+You can watch this plugin for changes by subscribing to releases on GitHub:
+https://github.com/ras0q/better-gitui.nvim/releases
+
+Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
+
+vim:tw=78:ts=8:noet:ft=help:norl:

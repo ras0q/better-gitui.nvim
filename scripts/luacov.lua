@@ -20,10 +20,8 @@ if jit then
     jit.off()
 end
 
-dofile("spec/minimal_init.lua")
+dofile("spec/better_gitui/minimal_init.lua")
 
 require("luacov")
--- NOTE: These arguments were just found from experimentation. They
--- may not be 100% right.
-_G.arg = { "--ignore-lua", [0] = "spec/minimal_init.lua" }
+_G.arg = { "--ignore-lua", [0] = "spec/better_gitui/minimal_init.lua" }
 require("busted.runner")({ standalone = false })
