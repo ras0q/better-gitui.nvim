@@ -52,12 +52,12 @@ jobs:
       - uses: jdx/mise-action@v2
       - name: Install luarocks
         uses: ColinKennedy/gh-actions-luarocks@v1.0.0
+      - name: Download type stubs
+        run: mise run deps:download
       - name: Install llscheck
         run: luarocks install llscheck
       - name: Run llscheck
-        run: |
-          git config url."https://github.com/".insteadOf git@github.com:
-          mise run llscheck
+        run: mise run llscheck
         env:
           LLSCHECK_CONFIG: .github/workflows/.luarc.json
 
@@ -80,33 +80,33 @@ jobs:
 
       - name: Check doc/
         run: uv tool run urlchecker check \
-            --branch main --subfolder doc \
+            --subfolder doc \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
             --retry-count 1 --timeout 5 .
       - name: Check lua/
         run: uv tool run urlchecker check \
-            --branch main --subfolder lua \
+            --subfolder lua \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
             --retry-count 1 --timeout 5 .
       - name: Check plugin/
         run: uv tool run urlchecker check \
-            --branch main --subfolder plugin \
+            --subfolder plugin \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
             --retry-count 1 --timeout 5 .
       - name: Check spec/
         run: uv tool run urlchecker check \
-            --branch main --subfolder spec \
+            --subfolder spec \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
             --retry-count 1 --timeout 5 .
       - name: Check README.md
         run: uv tool run urlchecker check \
-            --branch main --files README.md \
+            --files README.md \
             --no-print --retry-count 1 --timeout 5 .
       - name: Check CONTRIBUTING.md
         run: uv tool run urlchecker check \
-            --branch main --files CONTRIBUTING.md \
+            --files CONTRIBUTING.md \
             --no-print --retry-count 1 --timeout 5 .
       - name: Check CHANGELOG.md
         run: uv tool run urlchecker check \
-            --branch main --files CHANGELOG.md \
+            --files CHANGELOG.md \
             --no-print --retry-count 1 --timeout 5 .

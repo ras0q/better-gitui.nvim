@@ -54,10 +54,10 @@ jobs:
         uses: ColinKennedy/luarocks-rockspec-expander@v1.0.1
         with:
           input: template.rockspec
-          output: better-gitui-nvim-scm-1.rockspec
+          output: better-gitui.nvim-scm-1.rockspec
           delete_input_after: true
       - name: Install test dependencies
-        run: luarocks test better-gitui-nvim-scm-1.rockspec --prepare
+        run: luarocks test better-gitui.nvim-scm-1.rockspec --prepare
       - name: Run tests
         run: luarocks test --test-type busted
 
@@ -82,6 +82,9 @@ jobs:
           luarocks install busted
           luarocks install luacov
           luarocks install luacov-multiple
+      - uses: jdx/mise-action@v2
+        with:
+          install: false
       - name: Configure git for HTTPS
         run: git config --global url."https://github.com/".insteadOf "git@github.com:"
       - name: Run coverage
