@@ -16,7 +16,7 @@ Table of Contents                             *better-gitui-table-of-contents*
 ==============================================================================
 1. better-gitui.nvim                          *better-gitui-better-gitui.nvim*
 
-Open gitui <https://github.com/extrawurst/gitui> in a Neovim floating window,
+Open gitui <https://github.com/gitui-org/gitui> in a Neovim floating window,
 automatically themed to match your current colorscheme.
 
   -----------------------------------------------------------------------
