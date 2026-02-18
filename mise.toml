@@ -1,0 +1,5 @@
+[tools]
+lua-language-server = "latest"
+neovim = "latest"
+stylua = "latest"
+uv = "latest"
