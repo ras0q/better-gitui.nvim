@@ -3,10 +3,7 @@
 Open [gitui](https://github.com/gitui-org/gitui) in a Neovim floating window,
 automatically themed to match your current colorscheme.
 
-| <!-- --> | <!-- --> |
-|---|---|
-| Build Status | [![unittests](https://img.shields.io/github/actions/workflow/status/ras0q/better-gitui.nvim/test.yml?branch=main&style=for-the-badge&label=Unittests)](https://github.com/ras0q/better-gitui.nvim/actions/workflows/test.yml) [![documentation](https://img.shields.io/github/actions/workflow/status/ras0q/better-gitui.nvim/documentation.yml?branch=main&style=for-the-badge&label=Documentation)](https://github.com/ras0q/better-gitui.nvim/actions/workflows/documentation.yml) [![luacheck](https://img.shields.io/github/actions/workflow/status/ras0q/better-gitui.nvim/luacheck.yml?branch=main&style=for-the-badge&label=Luacheck)](https://github.com/ras0q/better-gitui.nvim/actions/workflows/luacheck.yml) [![stylua](https://img.shields.io/github/actions/workflow/status/ras0q/better-gitui.nvim/stylua.yml?branch=main&style=for-the-badge&label=Stylua)](https://github.com/ras0q/better-gitui.nvim/actions/workflows/stylua.yml) |
-| License | [![License-MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](https://github.com/ras0q/better-gitui.nvim/blob/main/LICENSE) |
+[![unittests](https://img.shields.io/github/actions/workflow/status/ras0q/better-gitui.nvim/test.yml?branch=main&style=for-the-badge&label=Unittests)](https://github.com/ras0q/better-gitui.nvim/actions/workflows/test.yml) [![ci](https://img.shields.io/github/actions/workflow/status/ras0q/better-gitui.nvim/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/ras0q/better-gitui.nvim/actions/workflows/ci.yml) [![License-MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](https://github.com/ras0q/better-gitui.nvim/blob/main/LICENSE)
 
 ## Features
 
@@ -18,16 +15,18 @@ automatically themed to match your current colorscheme.
 ## Requirements
 
 - Neovim >= 0.10.0
-- [`gitui`](https://github.com/extrawurst/gitui) available in your `$PATH`
+- [`gitui`](https://github.com/gitui-org/gitui) available in your `$PATH`
 
 ## Installation
 
 [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
+--- @type LazyPluginSpec
 {
     "ras0q/better-gitui.nvim",
-    version = "v1.*",
+    opts = {},
+    cmd = { "Gitui" },
 }
 ```
 
