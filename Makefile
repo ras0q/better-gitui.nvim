@@ -36,6 +36,9 @@ stylua:
 test: download-dependencies
 	busted .
 
+test-better-gitui:
+	busted --run=better_gitui spec/better_gitui/
+
 check-mdformat:
 	python -m mdformat --check README.md markdown/manual/docs/index.md
 
