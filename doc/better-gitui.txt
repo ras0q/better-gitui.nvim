@@ -1,42 +1,50 @@
-*better-gitui.txt*          For Neovim >= 0.10.0       Last change: 2026 February
+*better-gitui.txt*      For Neovim >= 0.10.0     Last change: 2026 February 18
 
 ==============================================================================
-Table of Contents                            *better-gitui-table-of-contents*
+Table of Contents                             *better-gitui-table-of-contents*
 
-1. better-gitui.nvim                                    |better-gitui-plugin|
-2. Features                                           |better-gitui-features|
-3. Requirements                                   |better-gitui-requirements|
-4. Installation                                   |better-gitui-installation|
-5. Usage                                                 |better-gitui-usage|
-6. How It Works                                   |better-gitui-how-it-works|
-7. API                                                     |better-gitui-api|
-8. Tracking Updates                           |better-gitui-tracking-updates|
-
-==============================================================================
-1. better-gitui.nvim                                    *better-gitui-plugin*
-
-Open gitui in a Neovim floating window, automatically themed to match your
-current colorscheme.
+1. better-gitui.nvim                          |better-gitui-better-gitui.nvim|
+  - Features                         |better-gitui-better-gitui.nvim-features|
+  - Requirements                 |better-gitui-better-gitui.nvim-requirements|
+  - Installation                 |better-gitui-better-gitui.nvim-installation|
+  - Usage                               |better-gitui-better-gitui.nvim-usage|
+  - How It Works                 |better-gitui-better-gitui.nvim-how-it-works|
+  - Minimal Reproduction |better-gitui-better-gitui.nvim-minimal-reproduction|
+  - Contributing                 |better-gitui-better-gitui.nvim-contributing|
+  - Tracking Updates         |better-gitui-better-gitui.nvim-tracking-updates|
 
 ==============================================================================
-2. Features                                           *better-gitui-features*
+1. better-gitui.nvim                          *better-gitui-better-gitui.nvim*
+
+Open gitui <https://github.com/extrawurst/gitui> in a Neovim floating window,
+automatically themed to match your current colorscheme.
+
+  -----------------------------------------------------------------------
+                                      
+  ----------------------------------- -----------------------------------
+  Build Status                        [unittests] [documentation]
+                                      [luacheck] [stylua]
+
+  License                             [License-MIT]
+  -----------------------------------------------------------------------
+
+FEATURES                             *better-gitui-better-gitui.nvim-features*
 
 - Opens gitui in a centered floating window
 - Auto-generates a gitui theme from your active Neovim colorscheme
-- Theme is cached per colorscheme and regenerated on |ColorScheme| events
+- Theme is cached per colorscheme and regenerated on `ColorScheme` events
 - No external Lua dependencies beyond Neovim itself
 
-==============================================================================
-3. Requirements                                   *better-gitui-requirements*
+
+REQUIREMENTS                     *better-gitui-better-gitui.nvim-requirements*
 
 - Neovim >= 0.10.0
-- `gitui` available in your `$PATH`
-  https://github.com/extrawurst/gitui
+- `gitui` <https://github.com/extrawurst/gitui> available in your `$PATH`
 
-==============================================================================
-4. Installation                                   *better-gitui-installation*
 
-lazy.nvim ~
+INSTALLATION                     *better-gitui-better-gitui.nvim-installation*
+
+lazy.nvim <https://github.com/folke/lazy.nvim>
 
 >lua
     {
@@ -45,10 +53,8 @@ lazy.nvim ~
     }
 <
 
-==============================================================================
-5. Usage                                                 *better-gitui-usage*
 
-COMMAND ~
+USAGE                                   *better-gitui-better-gitui.nvim-usage*
 
 >vim
     :Gitui
@@ -57,71 +63,65 @@ COMMAND ~
 Opens gitui in a floating window. Running `:Gitui` again while the window is
 open closes it.
 
-KEYMAPS (inside the gitui window) ~
+**Keymaps inside the gitui window:**
 
-- `<Esc>`  — exit terminal mode (enter normal mode)
-- `q`      — close the gitui window
-
-KEYMAP (recommended, add to your config) ~
+  Key     Action
+  ------- --------------------
+  <Esc>   Exit terminal mode
+  q       Close the window
+**Recommended keymap (add to your config):**
 
 >lua
     vim.keymap.set("n", "<leader>g", "<Cmd>Gitui<CR>", { desc = "Open gitui" })
 <
 
-==============================================================================
-6. How It Works                                   *better-gitui-how-it-works*
+
+HOW IT WORKS                     *better-gitui-better-gitui.nvim-how-it-works*
 
 When `:Gitui` is called, the plugin:
 
-1. Resolves a theme file path at
-   `{stdpath("cache")}/gitui/theme_{colorscheme}.ron`
-2. If the file does not exist, generates a `.ron` theme by reading highlight
-   groups from the current Neovim colorscheme and writes it to disk.
-3. Launches `gitui -t <theme_path>` inside a terminal buffer in a floating
-   window.
+1. Resolves a theme file path at `{stdpath("cache")}/gitui/theme_{colorscheme}.ron`
+2. If the file does not exist, generates a `.ron` theme by reading highlight groups from
+the current Neovim colorscheme and writes it to disk.
+3. Launches `gitui -t <theme_path>` inside a terminal buffer in a floating window.
 
-On every |ColorScheme| event the theme file for the new colorscheme is
-regenerated automatically (with a 100 ms debounce).
+On every `ColorScheme` event the theme for the new colorscheme is regenerated
+automatically (with a 100 ms debounce).
 
-==============================================================================
-7. API                                                     *better-gitui-api*
 
-All public functions live in the `better_gitui` module.
+MINIMAL REPRODUCTION     *better-gitui-better-gitui.nvim-minimal-reproduction*
 
-------------------------------------------------------------------------------
-                                                    *better_gitui.launch()*
-`require("better_gitui").launch()`
+If you encounter a bug, please reproduce it with the minimal config below
+before filing an issue.
 
-Open the gitui floating window. If already open, close it instead.
+Save this to a file (e.g. `/tmp/repro.lua`) and run:
 
-------------------------------------------------------------------------------
-                                               *better_gitui.write_theme()*
-`require("better_gitui").write_theme()`
+>sh
+    nvim --clean -u /tmp/repro.lua
+<
 
-Generate a gitui `.ron` theme from the current Neovim colorscheme and write
-it to the cache directory. Returns the path string on success, or `nil` on
-failure.
+>lua
+    -- /tmp/repro.lua
+    vim.opt.runtimepath:append("/path/to/better-gitui.nvim")
+    vim.cmd("runtime plugin/better_gitui.lua")
+    
+    -- Reproduce the issue here, e.g.:
+    -- vim.cmd("Gitui")
+<
 
-------------------------------------------------------------------------------
-                                            *better_gitui.get_theme_path()*
-`require("better_gitui").get_theme_path()`
+Replace `/path/to/better-gitui.nvim` with the actual path where the plugin is
+installed (e.g. `~/.local/share/nvim/lazy/better-gitui.nvim`).
 
-Return the expected path of the cached theme file for the current colorscheme.
-The file may or may not exist yet.
 
-------------------------------------------------------------------------------
-                                                     *better_gitui.close()*
-`require("better_gitui").close()`
+CONTRIBUTING                     *better-gitui-better-gitui.nvim-contributing*
 
-Close the gitui floating window and delete its buffer.
+See CONTRIBUTING.md <CONTRIBUTING.md> for development setup, testing, and
+coverage instructions.
 
-==============================================================================
-8. Tracking Updates                           *better-gitui-tracking-updates*
 
-See CHANGELOG.md for release notes.
+TRACKING UPDATES             *better-gitui-better-gitui.nvim-tracking-updates*
 
-You can watch this plugin for changes by subscribing to releases on GitHub:
-https://github.com/ras0q/better-gitui.nvim/releases
+See CHANGELOG.md <CHANGELOG.md> for release notes.
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
