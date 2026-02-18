@@ -11,7 +11,7 @@ mise install
 mise run deps:download
 ```
 
-`mise install` installs `stylua`, `neovim`, `lua-language-server`, and `uv` as declared in
+`mise install` installs `stylua`, `neovim` and `lua-language-server` as declared in
 `mise.toml`.
 
 `mise run deps:download` clones type stubs for busted/luassert and luvit-meta into

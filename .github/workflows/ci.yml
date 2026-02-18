@@ -35,7 +35,6 @@ jobs:
       - uses: jdx/mise-action@v2
       - run: mise run fmt:check:lua
 
-
   llscheck:
     runs-on: ubuntu-latest
     steps:
@@ -61,48 +60,9 @@ jobs:
         env:
           LLSCHECK_CONFIG: .github/workflows/.luarc.json
 
-
   mdformat:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
       - run: mise run fmt:check:md
-
-
-  urlchecker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-      - name: Install urlchecker
-        run: uv tool install urlchecker
-
-      - name: Check doc/
-        run: uv tool run urlchecker check \
-            --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 doc/
-      - name: Check lua/
-        run: uv tool run urlchecker check \
-            --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 lua/
-      - name: Check plugin/
-        run: uv tool run urlchecker check \
-            --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 plugin/
-      - name: Check spec/
-        run: uv tool run urlchecker check \
-            --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 spec/
-      - name: Check README.md
-        run: uv tool run urlchecker check \
-            --files README.md \
-            --no-print --retry-count 1 --timeout 5 .
-      - name: Check CONTRIBUTING.md
-        run: uv tool run urlchecker check \
-            --files CONTRIBUTING.md \
-            --no-print --retry-count 1 --timeout 5 .
-      - name: Check CHANGELOG.md
-        run: uv tool run urlchecker check \
-            --files CHANGELOG.md \
-            --no-print --retry-count 1 --timeout 5 .

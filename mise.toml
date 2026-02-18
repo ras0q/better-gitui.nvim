@@ -2,7 +2,7 @@
 lua-language-server = "latest"
 neovim = "latest"
 stylua = "latest"
-uv = "latest"
+"pipx:mdformat" = "latest"
 
 [tasks."deps:download"]
 description = "Clone LuaLS type stubs for busted, luassert, and luvit-meta"
@@ -26,7 +26,7 @@ run = "stylua lua plugin scripts spec --color always --check"
 
 [tasks."fmt:check:md"]
 description = "Check Markdown formatting with mdformat"
-run = "uv tool run mdformat --check README.md CONTRIBUTING.md"
+run = "mdformat --check README.md CONTRIBUTING.md"
 
 [tasks.fmt]
 description = "Apply Lua and Markdown formatting"
@@ -38,7 +38,7 @@ run = "stylua lua plugin scripts spec"
 
 [tasks."fmt:md"]
 description = "Apply Markdown formatting with mdformat"
-run = "uv tool run mdformat README.md CONTRIBUTING.md"
+run = "mdformat README.md CONTRIBUTING.md"
 
 [tasks.test]
 description = "Run busted unit tests"
