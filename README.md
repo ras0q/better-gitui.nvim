@@ -1,6 +1,6 @@
 # better-gitui.nvim
 
-Open [gitui](https://github.com/extrawurst/gitui) in a Neovim floating window,
+Open [gitui](https://github.com/gitui-org/gitui) in a Neovim floating window,
 automatically themed to match your current colorscheme.
 
 | <!-- --> | <!-- --> |

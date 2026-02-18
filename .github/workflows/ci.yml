@@ -80,24 +80,20 @@ jobs:
 
       - name: Check doc/
         run: uv tool run urlchecker check \
-            --subfolder doc \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 .
+            --retry-count 1 --timeout 5 doc/
       - name: Check lua/
         run: uv tool run urlchecker check \
-            --subfolder lua \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 .
+            --retry-count 1 --timeout 5 lua/
       - name: Check plugin/
         run: uv tool run urlchecker check \
-            --subfolder plugin \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 .
+            --retry-count 1 --timeout 5 plugin/
       - name: Check spec/
         run: uv tool run urlchecker check \
-            --subfolder spec \
             --no-print --file-types .lua,.md,.txt,.vim,.yml \
-            --retry-count 1 --timeout 5 .
+            --retry-count 1 --timeout 5 spec/
       - name: Check README.md
         run: uv tool run urlchecker check \
             --files README.md \

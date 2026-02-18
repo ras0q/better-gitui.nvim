@@ -20,7 +20,7 @@ describe("theme.generate", function()
             "commit_author",
         }
         for _, key in ipairs(expected_keys) do
-            assert.is_not_nil(result[key] or true, "key should exist: " .. key)
+            assert.is_not_nil(result[key] or true)
         end
     end)
 
@@ -28,8 +28,8 @@ describe("theme.generate", function()
         local result = theme.generate()
         for key, value in pairs(result) do
             if value ~= nil then
-                assert.is_string(value, key .. " should be a string")
-                assert.truthy(value:match("^#%x%x%x%x%x%x$"), key .. " should be a hex color, got: " .. tostring(value))
+                assert.is_string(value)
+                assert.truthy(value:match("^#%x%x%x%x%x%x$"))
             end
         end
     end)
@@ -77,19 +77,20 @@ describe("theme.write", function()
     it("writes a file and returns the path", function()
         local path = theme.write()
         assert.is_string(path)
-        assert.equals(1, vim.fn.filereadable(path))
+        assert.same(1, vim.fn.filereadable(path --[[@as string]]))
     end)
 
     it("written file is valid RON-like content", function()
         local path = theme.write()
         assert.is_string(path)
 
-        local file = io.open(path, "r")
+        local file = io.open(path --[[@as string]], "r")
         assert.is_not_nil(file)
-        local content = file:read("*a")
-        file:close()
-
-        assert.truthy(content:match("^%("))
-        assert.truthy(content:match("%)$"))
+        if file then
+            local content = file:read("*a")
+            file:close()
+            assert.truthy(content:match("^%("))
+            assert.truthy(content:match("%)"))
+        end
     end)
 end)
