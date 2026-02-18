@@ -26,7 +26,7 @@ describe("theme.generate", function()
 
     it("returns hex values when present", function()
         local result = theme.generate()
-        for key, value in pairs(result) do
+        for _, value in pairs(result) do
             if value ~= nil then
                 assert.is_string(value)
                 assert.truthy(value:match("^#%x%x%x%x%x%x$"))

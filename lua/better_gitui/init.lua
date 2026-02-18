@@ -26,5 +26,3 @@ function M.close()
 end
 
 return M
-
-
