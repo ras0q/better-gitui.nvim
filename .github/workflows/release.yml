@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  github:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    name: release-please
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          release-type: simple
+
+  vimdoc:
+    if: github.ref == 'refs/heads/main'
+    name: vimdoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+      - name: Generate vimdoc
+        uses: kdheepak/panvimdoc@main
+        with:
+          vimdoc: better-gitui
+          version: "Neovim >= 0.10.0"
+          demojify: true
+          treesitter: true
+      - name: Generate tags
+        run: nvim -c 'helptags doc' -c 'quit'
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "docs(vimdoc): Auto-generate vimdoc + vimtags"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+
+  luarocks:
+    if: startsWith(github.ref, 'refs/tags/v')
+    name: luarocks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nvim-neorocks/luarocks-tag-release@v7
+        env:
+          LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+        with:
+          template: "template.rockspec"

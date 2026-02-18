@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     branches:
-    - main
+      - main
   push:
     branches:
       - main
@@ -17,66 +17,73 @@ jobs:
         neovim: [v0.10.0, v0.11.0, stable, nightly]
         luaVersion: ["luajit-openresty"]
         include:
-        - os: "windows-latest"
-          toolchain: "msvc"
-          luaVersion: "5.1"
-          neovim: "v0.10.0"
-        - os: "windows-latest"
-          toolchain: "msvc"
-          luaVersion: "5.1"
-          neovim: "stable"
-        - os: "windows-latest"
-          toolchain: "msvc"
-          luaVersion: "5.1"
-          neovim: "nightly"
-
+          - os: windows-latest
+            toolchain: msvc
+            luaVersion: "5.1"
+            neovim: v0.10.0
+          - os: windows-latest
+            toolchain: msvc
+            luaVersion: "5.1"
+            neovim: stable
+          - os: windows-latest
+            toolchain: msvc
+            luaVersion: "5.1"
+            neovim: nightly
     runs-on: ${{ matrix.os }}
-    name: "OS: ${{ matrix.os }} - Neovim: ${{ matrix.neovim }} - Lua: ${{ matrix.luaVersion }}"
-
+    name: "test / ${{ matrix.os }} / nvim ${{ matrix.neovim }}"
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
+      - uses: actions/checkout@v4
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim }}
+      - name: Setup MSVC
+        if: matrix.toolchain == 'msvc'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Install Lua
+        uses: luarocks/gh-actions-lua@v11
+        with:
+          luaVersion: ${{ matrix.luaVersion }}
+      - name: Install luarocks
+        uses: ColinKennedy/gh-actions-luarocks@v1.0.0
+      - name: Expand rockspec
+        uses: ColinKennedy/luarocks-rockspec-expander@v1.0.1
+        with:
+          input: template.rockspec
+          output: better-gitui-nvim-scm-1.rockspec
+          delete_input_after: true
+      - name: Install test dependencies
+        run: luarocks test better-gitui-nvim-scm-1.rockspec --prepare
+      - name: Run tests
+        run: luarocks test --test-type busted
 
-    - name: Install Neovim
-      uses: rhysd/action-setup-vim@v1
-      with:
-        neovim: true
-        version: ${{ matrix.neovim }}
+  coverage:
+    runs-on: ubuntu-latest
+    name: coverage / smoke test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+      - name: Install Lua
+        uses: luarocks/gh-actions-lua@master
+        with:
+          luaVersion: "luajit-openresty"
+      - name: Install luarocks
+        uses: ColinKennedy/gh-actions-luarocks@v1.0.0
+      - name: Install dependencies
+        run: |
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacov-multiple
+      - name: Configure git for HTTPS
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+      - name: Run coverage
+        run: make coverage-html
+      - name: Verify report exists
+        run: |
+          test -f luacov_html/index.html || { echo "luacov_html/index.html not found"; exit 1; }
 
-    - name: Setup MSVC
-      # the 'luarocks/gh-actions-lua' step requires msvc to build PUC-Rio Lua
-      # versions on Windows (LuaJIT will be build using MinGW/gcc).
-      if: ${{ matrix.toolchain == 'msvc' }}
-      uses: ilammy/msvc-dev-cmd@v1
-
-    - name: Install Lua
-      uses: luarocks/gh-actions-lua@v11
-      with:
-        luaVersion: "${{ matrix.luaVersion }}"
-
-    - name: Install LuaRocks
-      # TODO: Replace with https://github.com/luarocks/gh-actions-luarocks after v6+
-      uses: ColinKennedy/gh-actions-luarocks@v1.0.0
-
-    - name: Print Versions
-      run: |
-        luarocks --version
-
-    # We need this hack until a better solution is available.
-    #
-    # Reference: https://github.com/nvim-neorocks/luarocks-tag-release/issues/435
-    #
-    - name: Expand The Template Rockspec
-      uses: ColinKennedy/luarocks-rockspec-expander@v1.0.1
-      with:
-        input: template.rockspec
-        output: better-gitui-nvim-scm-1.rockspec
-        delete_input_after: true
-
-    - name: Build Test Dependencies
-      run: |
-        luarocks test better-gitui-nvim-scm-1.rockspec --prepare
-
-    - name: Test
-      run: |
-        luarocks test --test-type busted

@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  commitlint:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: opensource-nepal/commitlint@v1
+
+  luacheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y luarocks
+          sudo luarocks install luacheck
+      - run: make luacheck
+
+  stylua:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v4.1.0
+        with:
+          version: latest
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: false
+      - run: make check-stylua
+
+  llscheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+      - name: Install Lua
+        uses: leafo/gh-actions-lua@v12
+        with:
+          luaVersion: "luajit-openresty"
+      - name: Install lua-language-server
+        uses: jdx/mise-action@v3
+        with:
+          tool_versions: |
+            lua-language-server latest
+      - name: Install luarocks
+        uses: ColinKennedy/gh-actions-luarocks@v1.0.0
+      - name: Install llscheck
+        run: luarocks install llscheck
+      - name: Run llscheck
+        run: |
+          git config url."https://github.com/".insteadOf git@github.com:
+          make llscheck CONFIGURATION=.github/workflows/.luarc.json
+
+  mdformat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mdformat
+        run: python -m pip install mdformat --user
+      - run: make check-mdformat
+
+  urlchecker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install urlchecker
+        run: python -m pip install urlchecker
+      - name: Check doc/
+        run: |
+          urlchecker check \
+            --branch main --subfolder doc \
+            --no-print --file-types .lua,.md,.txt,.vim,.yml \
+            --retry-count 1 --timeout 5 .
+      - name: Check lua/
+        run: |
+          urlchecker check \
+            --branch main --subfolder lua \
+            --no-print --file-types .lua,.md,.txt,.vim,.yml \
+            --retry-count 1 --timeout 5 .
+      - name: Check plugin/
+        run: |
+          urlchecker check \
+            --branch main --subfolder plugin \
+            --no-print --file-types .lua,.md,.txt,.vim,.yml \
+            --retry-count 1 --timeout 5 .
+      - name: Check spec/
+        run: |
+          urlchecker check \
+            --branch main --subfolder spec \
+            --no-print --file-types .lua,.md,.txt,.vim,.yml \
+            --retry-count 1 --timeout 5 .
+      - name: Check README.md
+        run: |
+          urlchecker check \
+            --branch main --files README.md \
+            --no-print --retry-count 1 --timeout 5 .
+      - name: Check CONTRIBUTING.md
+        run: |
+          urlchecker check \
+            --branch main --files CONTRIBUTING.md \
+            --no-print --retry-count 1 --timeout 5 .
+      - name: Check CHANGELOG.md
+        run: |
+          urlchecker check \
+            --branch main --files CHANGELOG.md \
+            --no-print --retry-count 1 --timeout 5 .
