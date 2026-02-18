@@ -1,3 +1,4 @@
+local config = require("better_gitui._core.config")
 local theme = require("better_gitui._core.theme")
 
 local M = {}
@@ -19,8 +20,8 @@ end
 local function _open_window()
     local width = vim.o.columns
     local height = vim.o.lines
-    local win_width = math.floor(width * 0.9)
-    local win_height = math.floor(height * 0.9)
+    local win_width = math.floor(width * config.get().window.width_ratio)
+    local win_height = math.floor(height * config.get().window.height_ratio)
     local row = math.floor((height - win_height) / 2)
     local col = math.floor((width - win_width) / 2)
 
@@ -37,7 +38,7 @@ local function _open_window()
         row = row,
         col = col,
         style = "minimal",
-        border = "rounded",
+        border = config.get().window.border,
     })
 
     if not ok then
@@ -73,7 +74,7 @@ function M.launch()
     _buf = buf
     _win = win
 
-    local cmd = { "gitui" }
+    local cmd = { config.get().gitui_path }
     if theme_path then
         vim.list_extend(cmd, { "-t", theme_path })
     end
